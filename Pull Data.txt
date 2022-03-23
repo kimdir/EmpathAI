@@ -1,0 +1,11 @@
+Pull Data:
+-Twitter:
+--Pull Data Start:
+03/23/2022
+--Pull Data End:
+04/23/2022
+--Max Pulls:
+500000
+--Pulls to Date:
+0
+--Pulls Remaining:
