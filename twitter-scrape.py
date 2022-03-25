@@ -12,10 +12,13 @@ class TwitterHandler:
                                             'retweetcount',
                                             'text',
                                             'hashtags'])
+        print("Twitter Handler Initialized")
 
-    def CalcRemainingPulls(pullDataPath,sourceName):
+    def CalcRemainingPulls(pullDataPath):
         with open(pullDataPath,'r') as pullDataFile:
             pass
+
+    def UpdatePullData(pullDataPath):
 
     def TweetScrape(words, from_date, countTweets):
         # Clear Data Frame for the tweet data
