@@ -19,7 +19,6 @@ class NLProcessor:
     def AnalyzeSample(self):
         """Primary method for analyzing text samples."""
 
-
     def TokenizeToWords(self):
         """Method for tokenizing samples to words."""
         # Tokenize the sample
