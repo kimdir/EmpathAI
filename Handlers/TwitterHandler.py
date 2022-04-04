@@ -33,7 +33,7 @@ class TwitterHandler:
         self.tweetData = pd.DataFrame(columns=self.tweetData.columns)
 
         # Search Twitter using a cursor
-        tweetsIterator = tweepy.Cursor(api.search_tweets, words,
+        tweetsIterator = tweepy.Cursor(self.api.search_tweets, words,
                                 lang="en", since_id=from_date,
                                 tweet_mode='extended').items(countTweets)
 
@@ -105,9 +105,7 @@ class TwitterHandler:
             #print(access_secret)
 
         # Set Twitter Access
-        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-        auth.set_access_token(access_key, access_secret)
-        api = tweepy.API(auth)
+        self.client = tweepy.Client(bearer_key)
 
         #TODO - Reconfigure this to take external options
         # Enter Hashtag and initial date
