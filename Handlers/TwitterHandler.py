@@ -33,12 +33,19 @@ class TwitterHandler:
         self.tweetData = pd.DataFrame(columns=self.tweetData.columns)
 
         # Search Twitter using a cursor
-        tweetsIterator = tweepy.Cursor(self.api.search_tweets, words,
-                                lang="en", since_id=from_date,
-                                tweet_mode='extended').items(countTweets)
 
+        # V1.1 Method
+        # tweetsIterator = tweepy.Cursor(self.api.search_tweets, words,
+        #                         lang="en", since_id=from_date,
+        #                         tweet_mode='extended').items(countTweets)
+
+        tweetDict = self.client.search_recent_tweets(words,max_results=10,
+                                                    tweet_fields=self.tweetFields,
+                                                    user_fields=self.userFields,
+                                                    expansions=['author_id','referenced_tweets.id'])
+        print(tweetDict.data)
         # Put data into list from iterator and check to ensure list is populated
-        tweetsList = [tweet for tweet in tweetsIterator]
+        tweetsList = [tweet for tweet in tweetDict]
         if len(tweetsList) == 0:
             print("No tweets scraped, exiting function...")
             return
@@ -48,37 +55,38 @@ class TwitterHandler:
 
         # Break tweet data into attributes and append to Data DataFrame
         for tweet in tweetsList:
+            pass
 
-            # Increment counter for each tweet processed
-            i = i+1
+            # # Increment counter for each tweet processed
+            # i = i+1
 
-            username = tweet.user.screen_name
-            description = tweet.user.description
-            location = tweet.user.location
-            following = tweet.user.friends_count
-            followers = tweet.user.followers_count
-            totaltweets = tweet.user.statuses_count
-            retweetcount = tweet.retweet_count
-            hashtags = tweet.entities['hashtags']
+            # username = tweet.user.screen_name
+            # description = tweet.user.description
+            # location = tweet.user.location
+            # following = tweet.user.friends_count
+            # followers = tweet.user.followers_count
+            # totaltweets = tweet.user.statuses_count
+            # retweetcount = tweet.retweet_count
+            # hashtags = tweet.entities['hashtags']
 
-            # Check for retweets
-            try:
-                text = tweet.retweeted_status.full_text
-            except AttributeError:
-                text = tweet.full_text
+            # # Check for retweets
+            # try:
+            #     text = tweet.retweeted_status.full_text
+            # except AttributeError:
+            #     text = tweet.full_text
 
             # Convert hashtag data to list
-            hashtext = list()
-            for tag in range(0,len(hashtags)):
-                hashtext.append(hashtags[tag]['text'])
+            # hashtext = list()
+            # for tag in range(0,len(hashtags)):
+            #     hashtext.append(hashtags[tag]['text'])
 
             # Append formatted data to Data Frame
-            newEntry = [username, description, location, following,
-                        followers, totaltweets, retweetcount, text, hashtext]
-            self.tweetData.loc[len(tweetData)] = newEntry
+            # newEntry = [username, description, location, following,
+            #             followers, totaltweets, retweetcount, text, hashtext]
+            # self.tweetData.loc[len(tweetData)] = newEntry
 
         # Output tweet count
-        print("Number of scraped tweets: %d" , (i))
+        # print("Number of scraped tweets: %d" , (i))
 
     def ConnectToAPI(self):
         # Retrieve Twitter dev keys from file (Key file excluded from git)
@@ -132,6 +140,10 @@ class TwitterHandler:
         now = DTObject.now()
         self.fromDate = now - dt.timedelta(days=1)
 
+    def GetFields(self):
+        self.userFields = ["id","name","username"]
+        self.tweetFields = ["text","author_id","created_at"]
+
     def GetTweets(self):
 
         self.ConnectToAPI()
@@ -142,10 +154,12 @@ class TwitterHandler:
         print("Successfully assigned timeframe...")
         self.CalcPullCount()
         print("Successfully calculated pull count...")
+        self.GetFields()
+        print("Successfully assigned desired data fields...")
         self.TweetScrape(self.keywords,self.fromDate,self.pullCount)
         print("Successfully scraped tweets!")
 
 if __name__ == '__main__':
     debug = True
-    TwitterHandler = TwitterHander()
+    TwitterHandler = TwitterHandler()
     TwitterHandler.GetTweets()

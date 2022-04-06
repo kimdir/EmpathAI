@@ -15,4 +15,4 @@ if __name__ == ('__main__'):
     DBHandler = dh.DatabaseHandler()
 
     THandler.GetTweets()
-    DBHandler.SaveToDB("Tweet Data",TwitterHandler.tweetData)
+    #DBHandler.SaveToDB("Tweet Data",THandler.tweetData)
